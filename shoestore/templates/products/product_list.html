@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Shoe Store - Products{% endblock %}
+
+{% block content %}
+    <h1>Available Shoes</h1>
+    <ul>
+        {% for shoe in shoes %}
+            <li>
+                <h2>{{ shoe.name }}</h2>
+                <p>Brand: {{ shoe.brand }}</p>
+                <p>Price: ${{ shoe.price }}</p>
+                <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" width="150">
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% if user.is_staff %}
+    <a href="{% url 'add_shoe' %}">Add New Shoe</a>
+{% endif %}
