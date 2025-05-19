@@ -3,18 +3,79 @@
 {% block title %}Shoe Store - Products{% endblock %}
 
 {% block content %}
-    <h1>Available Shoes</h1>
-    <ul>
-        {% for shoe in shoes %}
-            <li>
-                <h2>{{ shoe.name }}</h2>
-                <p>Brand: {{ shoe.brand }}</p>
-                <p>Price: ${{ shoe.price }}</p>
-                <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" width="150">
-            </li>
+
+
+
+
+
+
+<h2>Products</h2>
+
+<form method="get">
+    <input type="text" name="q" value="{{ search_query }}" placeholder="Search shoes...">
+
+    <select name="brand">
+        <option value="">All Brands</option>
+        {% for b in brands %}
+            <option value="{{ b }}" {% if b == selected_brand %}selected{% endif %}>{{ b }}</option>
         {% endfor %}
-    </ul>
+    </select>
+
+    <select name="per_page">
+        <option value="10" {% if per_page == "10" %}selected{% endif %}>10</option>
+        <option value="20" {% if per_page == "20" %}selected{% endif %}>20</option>
+        <option value="40" {% if per_page == "40" %}selected{% endif %}>40</option>
+    </select>
+
+    <select name="sort">
+        <option value="">Sort By</option>
+        <option value="name_asc" {% if sort_by == "name_asc" %}selected{% endif %}>Name (A → Z)</option>
+        <option value="name_desc" {% if sort_by == "name_desc" %}selected{% endif %}>Name (Z → A)</option>
+        <option value="price_asc" {% if sort_by == "price_asc" %}selected{% endif %}>Price (Low → High)</option>
+        <option value="price_desc" {% if sort_by == "price_desc" %}selected{% endif %}>Price (High → Low)</option>
+    </select>    
+
+    <button type="submit">Filter</button>
+</form>
+
+<hr>
+
+{% for shoe in page_obj %}
+    <div>
+        <h3>{{ shoe.name }}</h3>
+        <p>Brand: {{ shoe.brand }}</p>
+        <p>Price: ${{ shoe.price }}</p>
+
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add_to_cart' shoe.id %}">
+                {% csrf_token %}
+                <button type="submit">Add to Cart</button>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<div>
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+</div>
+
+<div>
+    {% if page_obj.has_previous %}
+    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}
+            {% if selected_brand %}brand={{ selected_brand }}&{% endif %}
+            per_page={{ per_page }}&sort={{ sort_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    
+
+    {% if page_obj.has_next %}
+        <a href="?{% if search_query %}q={{ search_query }}&{% endif %}
+                  {% if selected_brand %}brand={{ selected_brand }}&{% endif %}
+                  per_page={{ per_page }}&sort={{ sort_by }}&page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
 {% endblock %}
 {% if user.is_staff %}
     <a href="{% url 'add_shoe' %}">Add New Shoe</a>
+    <a href="{% url 'add_to_cart' shoe.id %}">Add to Cart</a>
 {% endif %}

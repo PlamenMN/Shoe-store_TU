@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Cart</h2>
+
+{% if items %}
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.shoe.name }} — ${{ item.shoe.price }} × {{ item.quantity }} =
+                ${{ item.total_price|floatformat:2 }}
+                <a href="{% url 'remove_from_cart' item.shoe.id %}">Remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <strong>Total: ${{ total|floatformat:2 }}</strong>
+    
+    <form method="get" action="{% url 'checkout' %}">
+        <button type="submit">Proceed to Checkout</button>
+    </form>
+    
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+<a href="{% url 'product_list' %}">Continue Shopping</a>
+{% endblock %}

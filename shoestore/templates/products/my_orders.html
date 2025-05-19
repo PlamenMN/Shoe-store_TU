@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Orders</h2>
+
+{% if orders %}
+    {% for order in orders %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+            <p><strong>Order #{{ order.id }}</strong> — {{ order.created_at|date:"M d, Y H:i" }}</p>
+            <p><strong>Total:</strong> ${{ order.total_price|floatformat:2 }}</p>
+            <p><strong>Address:</strong> {{ order.address }}</p>
+            <p><strong>Payment:</strong> {{ order.get_payment_type_display }}</p>
+            <p><strong>Delivery:</strong> {{ order.delivery_service }}</p>
+            <ul>
+                {% for item in order.items.all %}
+                    <li>{{ item.quantity }} × {{ item.shoe.name }} @ ${{ item.price }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You haven't placed any orders yet.</p>
+{% endif %}
+{% endblock %}
