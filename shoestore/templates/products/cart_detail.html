@@ -6,7 +6,7 @@
     <ul>
         {% for item in items %}
             <li>
-                {{ item.shoe.name }} — ${{ item.shoe.price }} × {{ item.quantity }} =
+                {{ item.shoe.name }} — ${{ item.shoe.price }} - Size: {{ item.size }} × {{ item.quantity }} =
                 ${{ item.total_price|floatformat:2 }}
                 <a href="{% url 'remove_from_cart' item.shoe.id %}">Remove</a>
             </li>

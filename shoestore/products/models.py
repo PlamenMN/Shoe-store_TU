@@ -8,6 +8,7 @@ class Shoe(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='shoes/', blank=True, null=True)
     stock = models.PositiveIntegerField()
+    size = models.CharField(max_length=5,default= '42')
 
     def __str__(self):
         return self.name
@@ -25,6 +26,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     shoe = models.ForeignKey('Shoe', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(max_length=5, default='42')
 
     def __str__(self):
         return f"{self.quantity} x {self.shoe.name}"
@@ -52,6 +54,7 @@ class OrderItem(models.Model):
     shoe = models.ForeignKey(Shoe, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    size = models.CharField(max_length=5, default= '42')
 
     def total_price(self):
         return self.quantity * self.price

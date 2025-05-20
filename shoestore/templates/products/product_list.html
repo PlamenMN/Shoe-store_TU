@@ -57,11 +57,27 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'add_to_cart' shoe.id %}">
             {% csrf_token %}
+
+            <label for="size_{{ shoe.id }}">Size:</label>
+            <select name="size" id="size_{{ shoe.id }}" required>
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42" selected>42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+            </select>
+
+            <label for="quantity_{{ shoe.id }}">Quantity:</label>
+            <input type="number" name="quantity" id="quantity_{{ shoe.id }}" value="1" min="1" required>
+
             <button type="submit">Add to Cart</button>
         </form>
         {% endif %}
     </div>
 {% endfor %}
+
 
 
 <div>

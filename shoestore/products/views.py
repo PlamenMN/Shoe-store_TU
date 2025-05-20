@@ -22,13 +22,15 @@ def add_shoe(request):
 def add_to_cart(request, shoe_id):
     shoe = get_object_or_404(Shoe, id=shoe_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        size = request.POST.get('size')
 
-    item, item_created = CartItem.objects.get_or_create(cart=cart, shoe=shoe)
-    if not item_created:
-        item.quantity += 1
-        item.save()
+        item = CartItem.objects.create(cart=cart, shoe=shoe, quantity=quantity, size=size)
 
     return redirect('cart_detail')
+
 
 @login_required
 def cart_detail(request):
@@ -83,7 +85,8 @@ def checkout(request):
                     order=order,
                     shoe=shoe,
                     quantity=item.quantity,
-                    price=shoe.price
+                    price=shoe.price,
+                    size=item.size
                 )
 
             # Clear the cart
