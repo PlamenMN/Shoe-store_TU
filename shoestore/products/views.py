@@ -16,10 +16,6 @@ def add_shoe(request):
     
     return render(request, 'products/add_shoe.html', {'form': form})
 
-# @login_required
-# def product_list(request):
-#     shoes = Shoe.objects.all()
-#     return render(request, "products/product_list.html", {"shoes": shoes})
 
 
 @login_required
