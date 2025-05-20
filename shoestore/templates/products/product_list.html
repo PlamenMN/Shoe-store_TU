@@ -41,19 +41,28 @@
 <hr>
 
 {% for shoe in page_obj %}
-    <div>
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
         <h3>{{ shoe.name }}</h3>
         <p>Brand: {{ shoe.brand }}</p>
         <p>Price: ${{ shoe.price }}</p>
 
+        {% if shoe.image %}
+            <div>
+                <img src="{{ shoe.image.url }}" alt="{{ shoe.name }}" style="max-width: 200px; margin-top: 10px;">
+            </div>
+        {% else %}
+            <p style="color: #999;">No image available</p>
+        {% endif %}
+
         {% if user.is_authenticated %}
-            <form method="post" action="{% url 'add_to_cart' shoe.id %}">
-                {% csrf_token %}
-                <button type="submit">Add to Cart</button>
-            </form>
+        <form method="post" action="{% url 'add_to_cart' shoe.id %}">
+            {% csrf_token %}
+            <button type="submit">Add to Cart</button>
+        </form>
         {% endif %}
     </div>
 {% endfor %}
+
 
 <div>
     <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
@@ -74,8 +83,8 @@
     {% endif %}
 </div>
 
-{% endblock %}
 {% if user.is_staff %}
     <a href="{% url 'add_shoe' %}">Add New Shoe</a>
-    <a href="{% url 'add_to_cart' shoe.id %}">Add to Cart</a>
 {% endif %}
+
+{% endblock %}

@@ -68,11 +68,26 @@ def checkout(request):
             order.save()
 
             for item in items:
+                # Deduct stock
+                shoe = item.shoe
+                if shoe.stock >= item.quantity:
+                    shoe.stock -= item.quantity
+                    shoe.save()
+                else:
+                    # Optionally handle insufficient stock
+                    return render(request, 'products/checkout.html', {
+                        'form': form,
+                        'items': items,
+                        'total': cart.total_price(),
+                        'error': f"Not enough stock for {shoe.name}."
+                    })
+
+                # Create the order item
                 OrderItem.objects.create(
                     order=order,
-                    shoe=item.shoe,
+                    shoe=shoe,
                     quantity=item.quantity,
-                    price=item.shoe.price
+                    price=shoe.price
                 )
 
             # Clear the cart
@@ -130,3 +145,10 @@ def product_list(request):
         'per_page': per_page,
         'sort_by': sort_by,
     })
+
+def about_us(request):
+    return render(request, 'pages/about.html')
+
+def faq(request):
+    return render(request, 'pages/faq.html')
+
