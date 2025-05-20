@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import product_list, add_shoe, cart_detail, add_to_cart, remove_from_cart, checkout, my_orders, about_us, faq
+from .views import product_list, add_shoe, cart_detail, add_to_cart, remove_from_cart, checkout, my_orders, about_us, faq, delete_shoe
 
 
 urlpatterns = [
     path('', product_list, name="product_list"),
     path('add/', add_shoe, name="add_shoe"),  # New URL for adding shoes
+    path('delete-shoe/<int:shoe_id>/', delete_shoe, name='delete_shoe'),
 ]
 
 #To be reformated

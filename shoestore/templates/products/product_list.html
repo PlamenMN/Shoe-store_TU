@@ -45,6 +45,7 @@
         <h3>{{ shoe.name }}</h3>
         <p>Brand: {{ shoe.brand }}</p>
         <p>Price: ${{ shoe.price }}</p>
+        <p>Description: {{ shoe.description }}</p>
 
         {% if shoe.image %}
             <div>
@@ -57,7 +58,6 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'add_to_cart' shoe.id %}">
             {% csrf_token %}
-
             <label for="size_{{ shoe.id }}">Size:</label>
             <select name="size" id="size_{{ shoe.id }}" required>
                 <option value="38">38</option>
@@ -75,9 +75,16 @@
             <button type="submit">Add to Cart</button>
         </form>
         {% endif %}
+
+        {% if user.is_staff %}
+        <form method="post" action="{% url 'delete_shoe' shoe.id %}" style="margin-top: 10px;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this shoe?')"
+                    style="background-color: red; color: white;">Delete Shoe</button>
+        </form>
+        {% endif %}
     </div>
 {% endfor %}
-
 
 
 <div>

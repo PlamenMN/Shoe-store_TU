@@ -5,7 +5,7 @@ class Shoe(models.Model):
     name = models.CharField(max_length=255)
     brand = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    description = models.TextField(blank = True)
     image = models.ImageField(upload_to='shoes/', blank=True, null=True)
     stock = models.PositiveIntegerField()
     size = models.CharField(max_length=5,default= '42')

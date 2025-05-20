@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.contrib.admin.views.decorators import staff_member_required
 from .models import Shoe, Cart, CartItem, Order, OrderItem
 from .forms import ShoeForm, CheckoutForm
 
@@ -151,3 +152,9 @@ def about_us(request):
 def faq(request):
     return render(request, 'pages/faq.html')
 
+@staff_member_required
+def delete_shoe(request, shoe_id):
+    shoe = get_object_or_404(Shoe, id=shoe_id)
+    if request.method == 'POST':
+        shoe.delete()
+    return redirect('product_list')  # or whatever the name of your product list view is
